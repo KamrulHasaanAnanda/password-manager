@@ -1,16 +1,16 @@
 import { React, useReducer, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 
 const Login = ()=>{
-    const {signup,currentUser} = useAuth();
+    const {login,currentUser} = useAuth();
 // console.log(`signup`, signup);
+    const history = useHistory();
     const [state, setState] = useReducer(
         (state, newState) => ({ ...state, ...newState }),
         {
-                name: '',
+                
                 password: '',
-                confirm_password:'',
                 email: '',
         });
         const [error, setError] = useState("");
@@ -27,18 +27,14 @@ const Login = ()=>{
         const handleSubmit = async(e)=>{
             e.preventDefault();
             console.log(`state.password`, state.password)
-            if(state.password !== state.confirm_password){
-                setError("Passwords don't match");
-            }else{
-
+         
                 try{
-                    console.log(`state.email`, state.email)
-                    await signup(state.email,state.password);
+                    await login(state.email,state.password);
                     setError("Your account created");
                 }catch{
                     setError("Failed to create a account");
                 }
-            }
+            
         }
 
         let errorMessage = "";
@@ -52,7 +48,7 @@ const Login = ()=>{
         
     return(
         <div className="container mx-auto mt-4">
-            <div className="relative w-6/12 border-0 bg-blue-200 rounded-md inline-grid mt-12 p-8">
+            <div className="relative md:w-auto border-0 bg-blue-200 rounded-md inline-grid mt-12 p-8">
                 {/* {currentUser} */}
                 <h3 className="absolute -top-4 rounded-md bg-red-300 p-3 left-2">Login Now</h3>
                {errorMessage} 

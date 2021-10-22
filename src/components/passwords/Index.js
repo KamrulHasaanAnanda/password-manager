@@ -1,5 +1,6 @@
 import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import { React, useEffect, useReducer } from "react";
+import { useAuth } from "../../contexts/AuthContext";
 import { db } from "../../firebase-config";
 import AddPassword from "./AddPassword";
 import Update from "./Update";
@@ -9,7 +10,7 @@ import Update from "./Update";
 const Index = ()=>{
 // console.log(`signup`, signup);
 const userCollectionRef = collection(db, "passwords");
-
+const {currentUser,logout} = useAuth();
     const [state, setState] = useReducer(
         (state, newState) => ({ ...state, ...newState }),
         {
@@ -41,6 +42,7 @@ const userCollectionRef = collection(db, "passwords");
         
           const getPasswords = async ()=>{
             const data = await getDocs(userCollectionRef);
+            
             // console.log(`data`, data.docs[0])
             setState({
                 passwords:data.docs.map((doc)=>({...doc.data(), id:doc.id}))
@@ -62,7 +64,10 @@ const userCollectionRef = collection(db, "passwords");
 
     let tableData = ""
     if(state.passwords && !state.addPassword && !state.updateData){
-        tableData = state.passwords.map(
+        let passwordValue = state.passwords.filter(pass=> pass.user_id === currentUser.uid);
+        console.log(`passwordValue`, passwordValue)
+        
+        tableData = passwordValue.map(
             password=>{
                 // console.log(`password`, password)
                 // console.log(password.password.length)
@@ -89,6 +94,11 @@ const userCollectionRef = collection(db, "passwords");
                 <h3 className="border-0 bg-blue-300 rounded-md p-4 font-bold cursor-pointer" onClick={()=>setState({
                     addPassword:!state.addPassword
                 })}>Add Password</h3>
+                <h3 className="border-0 bg-red-700 rounded-md p-4 font-bold ml-auto cursor-pointer" onClick={async()=>{
+                    await logout();
+                }}>
+                    Log Out
+                </h3>
             </div>
             <div>
                 {state.addPassword ? 

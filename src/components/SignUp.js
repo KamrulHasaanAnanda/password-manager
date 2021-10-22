@@ -1,21 +1,24 @@
-import { React, useReducer, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { React, useEffect, useReducer, useState } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+
 
 
 const SignUp = ()=>{
     const {signup,currentUser,errors} = useAuth();
-    console.log(`errorwwwww`, errors)
-    const history = useHistory();
-// console.log(`signup`, signup);
+   // console.log(`signup`, signup);
     const [state, setState] = useReducer(
         (state, newState) => ({ ...state, ...newState }),
         {
-                username: '',
-                password: '',
-                confirm_password:'',
-                email: '',
+            username: '',
+            password: '',
+            confirm_password:'',
+            email: '',
+            errorm:""
         });
+        useEffect(() => {
+            setState({errorm:errors})
+        }, [errors])
         const [error, setError] = useState("");
 
         const handleChange = (e)=>{
@@ -36,11 +39,10 @@ const SignUp = ()=>{
 
                 try{
                     // console.log(`state.email`, state.email)
-                   await signup(state.email,state.password,state.username);
-                        console.log(`errors`, errors)
+                   await signup(state.email,state.password,state.username)
                          setError(errors?.err?.code);
                         // if(!errors?.err?.code){
-                        //     history.push("/home");
+                        //     
                         // }
                 }catch{
                     setError(errors?.err?.code);
@@ -59,7 +61,7 @@ const SignUp = ()=>{
         
     return(
         <div className="container  mt-4">
-            <div className="relative w-6/12 border-0 bg-blue-200 rounded-md inline-grid mt-12 p-8">
+            <div className="relative  md:w-auto border-0 bg-blue-200 rounded-md inline-grid mt-12 p-8">
                 <h3 className="absolute -top-4 rounded-md bg-red-300 p-3 left-2">Register Now</h3>
                {errorMessage} 
                <form className="grid" onSubmit={handleSubmit}>

@@ -37,7 +37,7 @@ const Update = (props)=>{
         
     return(
         <div className="container  mt-4">
-            <div className="relative w-6/12 border-0 bg-blue-200 rounded-md inline-grid mt-12 p-8">      
+            <div className="relative md:w-auto border-0 bg-blue-200 rounded-md inline-grid mt-12 p-8">      
                 {
                 state.updateMessage ?
                 <h3 className="absolute -top-4 rounded-md bg-red-500 p-3 left-2">Updated</h3> :

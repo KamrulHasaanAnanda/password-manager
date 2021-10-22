@@ -7,7 +7,9 @@ import {
   updateProfile
 } from "firebase/auth";
 import React, { useContext, useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import "../firebase-config";
+
 // import "../firebase";
 
 const AuthContext = React.createContext();
@@ -17,6 +19,7 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }) {
+  const history = useHistory();
   const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState();
   const [errors,setErrors] = useState();
@@ -37,7 +40,13 @@ export function AuthProvider({ children }) {
     const auth = getAuth();
     // console.log(`auth`, auth)
     try{
-      await createUserWithEmailAndPassword(auth, email, password);
+      await createUserWithEmailAndPassword(auth, email, password).then((val)=>{
+        history.push("/home");
+      }).catch((err)=>{
+        alert("Already taken email");
+        history.push("/");
+        console.log(`errin `, err)
+      });
       // update profile
       await updateProfile(auth.currentUser, {
         displayName: username,

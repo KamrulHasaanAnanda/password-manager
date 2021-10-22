@@ -1,15 +1,17 @@
 import { React, useReducer, useState } from "react";
-import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { Link, useHistory } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 
 const SignUp = ()=>{
-    const {signup,currentUser} = useAuth();
+    const {signup,currentUser,errors} = useAuth();
+    console.log(`errorwwwww`, errors)
+    const history = useHistory();
 // console.log(`signup`, signup);
     const [state, setState] = useReducer(
         (state, newState) => ({ ...state, ...newState }),
         {
-                name: '',
+                username: '',
                 password: '',
                 confirm_password:'',
                 email: '',
@@ -27,17 +29,21 @@ const SignUp = ()=>{
 
         const handleSubmit = async(e)=>{
             e.preventDefault();
-            console.log(`state.password`, state.password)
+            // console.log(`state.password`, state.password)
             if(state.password !== state.confirm_password){
                 setError("Passwords don't match");
             }else{
 
                 try{
-                    console.log(`state.email`, state.email)
-                    await signup(state.email,state.password);
-                    setError("Your account created");
+                    // console.log(`state.email`, state.email)
+                   await signup(state.email,state.password,state.username);
+                        console.log(`errors`, errors)
+                         setError(errors?.err?.code);
+                        // if(!errors?.err?.code){
+                        //     history.push("/home");
+                        // }
                 }catch{
-                    setError("Failed to create a account");
+                    setError(errors?.err?.code);
                 }
             }
         }
@@ -54,11 +60,10 @@ const SignUp = ()=>{
     return(
         <div className="container  mt-4">
             <div className="relative w-6/12 border-0 bg-blue-200 rounded-md inline-grid mt-12 p-8">
-                {currentUser}
                 <h3 className="absolute -top-4 rounded-md bg-red-300 p-3 left-2">Register Now</h3>
                {errorMessage} 
                <form className="grid" onSubmit={handleSubmit}>
-                <input className="h-12 rounded-md my-4 text-center" onChange={handleChange} value={state.name} type="text" name="name" placeholder="Enter Name"/>
+                <input className="h-12 rounded-md my-4 text-center" onChange={handleChange} value={state.username} type="text" name="username" placeholder="Enter Name"/>
                 <input className="h-12 rounded-md my-4 text-center" onChange={handleChange} value={state.email}  type="text" name="email" placeholder="Enter Email"/>
                 <input className="h-12 rounded-md my-4 text-center" onChange={handleChange} value={state.password}  type="password" name="password" placeholder="Enter Password"/>
                 <input className="h-12 rounded-md my-4 text-center" onChange={handleChange} value={state.confirm_password} type="password" name="confirm_password"  placeholder="Enter Password Confirmation"/>

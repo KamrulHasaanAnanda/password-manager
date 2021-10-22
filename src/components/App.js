@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import '../App.css';
-import { AuthProvider } from '../context/AuthContext';
+import { AuthProvider } from '../contexts/AuthContext';
 import Login from "./Login";
 import Index from "./passwords/Index";
 import SignUp from "./SignUp";

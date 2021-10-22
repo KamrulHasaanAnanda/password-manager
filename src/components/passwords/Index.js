@@ -103,7 +103,7 @@ const {currentUser,logout} = useAuth();
             <div>
                 {state.addPassword ? 
                 <div>
-                    <AddPassword changeAddPassword={changeAddPassword}/>
+                    <AddPassword getPassword={getPasswords} changeAddPassword={changeAddPassword}/>
                 </div> :
                 ""
             }

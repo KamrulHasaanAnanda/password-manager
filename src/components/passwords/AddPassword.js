@@ -36,6 +36,7 @@ const AddPassword = (props)=>{
             const add = await addDoc(userCollectionRef,{name:state.name, password:state.password ,user_id:currentUser.uid});
             // console.log(`add`, add)
             if(add){
+                props.getPasswords();
                 setState({addMessage:true})
             }
           }
